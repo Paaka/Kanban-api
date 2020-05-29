@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Note = require('./Note');
 
 const listSchema = mongoose.Schema({
     listTitle:{
@@ -16,6 +17,16 @@ const listSchema = mongoose.Schema({
         ref:'User',
     }
 });
+
+
+
+listSchema.pre('remove', async function(next){
+    const list = this;
+    console.log(`Ciekawe czy zadziala`)
+    await Note.deleteMany({listID: list._id});
+
+    next();
+})
 
 const Lists = mongoose.model('Lists',listSchema);
 

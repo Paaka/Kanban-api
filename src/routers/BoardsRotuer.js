@@ -26,8 +26,10 @@ Router.get('/Dashboards', auth, async(req,res)=>{
 })
 
 Router.delete('/Dashboards/:id', auth, async(req,res)=>{
+
     try {
-        const board = await Board.findOneAndDelete({_id:req.params.id,owner:req.user._id});
+        const board = await Board.findOne({_id:req.params.id,owner:req.user._id});
+        await board.remove();
         res.send(board);
     } catch (error) {
         res.status(500).send(error);

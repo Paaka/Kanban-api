@@ -23,4 +23,14 @@ listRouter.get('/lists',auth, async(req,res)=>{
     }
 })
 
+listRouter.delete('/lists/:id',auth, async(req,res)=>{
+    try {
+        const list = await List.findOne({_id:req.params.id, owner:req.user._id});
+        await list.remove();
+        res.status(204).send(list);
+    } catch (error) {
+        res.status(500).send(error);
+    }
+})
+
 module.exports = listRouter;
