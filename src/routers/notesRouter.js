@@ -41,4 +41,23 @@ notesRouter.get('/notes/:id', async(req,res)=>{
     }
 })
 
+notesRouter.patch('/notes',auth, async (req, res)=>{
+    const updates = Object.keys(req.body);
+    const allowedUpadtes = ['cardID','listID'];
+    const isUpdateValid = updates.every(update => allowedUpadtes.includes(update));
+
+    if(!isUpdateValid){
+        return res.status(400).send({error: 'Invalid Update'});
+    }
+
+    try {
+        const updatedNote = await Note.findOne({owner: req.user._id, _id:req.body.cardID});
+        updatedNote.listID = req.body.listID;
+        await updatedNote.save();
+        res.send(updatedNote);
+    } catch (error) {      
+        res.status(400).send(error);
+    }
+})
+
 module.exports = notesRouter;

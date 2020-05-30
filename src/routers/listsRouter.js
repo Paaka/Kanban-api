@@ -33,4 +33,23 @@ listRouter.delete('/lists/:id',auth, async(req,res)=>{
     }
 })
 
+listRouter.patch('/lists', auth, async(req,res)=>{
+    const updates = Object.keys(req.body);
+    const allowedUpdates = ['listID','newTitle'];
+    const isUpdateValid = updates.every(update => allowedUpdates.includes(update));
+
+    if(!isUpdateValid){
+        return res.status(400).send({error: 'Invalid Update'});
+    }
+
+    try {
+        const listToUpdate = await List.findOne({owner:req.user._id, _id: req.body.listID});
+        listToUpdate.listTitle = req.body.newTitle;
+        await listToUpdate.save();
+        res.send({});
+    } catch (error) {
+        res.status(400).send({error: 'Invalid updates'})
+    }
+})
+
 module.exports = listRouter;

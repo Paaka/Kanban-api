@@ -35,4 +35,24 @@ Router.delete('/Dashboards/:id', auth, async(req,res)=>{
         res.status(500).send(error);
     }
 })
+
+Router.patch('/Boards', auth, async(req,res)=> {
+  const updates = Object.keys(req.body);
+  const allowedUpadates = ['boardID', 'newTitle'];
+  const isUpdateValid = updates.every(update => allowedUpadates.includes(update));
+
+  if(!isUpdateValid){
+      return res.status(400).send({error:'Invalid updates'});
+  }
+
+  try {
+      const updatedBoard = await Board.findOne({_id:req.body.boardID, owner:req.user._id});
+      updatedBoard.title = req.body.newTitle;
+      await updatedBoard.save();
+      res.status(200).send();
+  } catch (error) {
+      res.status(400).error(error)
+  }
+  
+})
 module.exports = Router;
