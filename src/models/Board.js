@@ -11,7 +11,16 @@ const boardSchema = mongoose.Schema({
         type:mongoose.Schema.Types.ObjectId,
         required:true,
         ref:'User',
+    },
+    primaryColor:{
+        type:String,
+        required:true,
+    },
+    secondaryColor:{
+        type:String,
+        required:true,
     }
+
 })
 
 boardSchema.pre('remove',async function(next){
