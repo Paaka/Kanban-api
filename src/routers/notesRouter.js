@@ -25,25 +25,9 @@ notesRouter.get('/notes',auth, async(req,res)=>{
     }
 })
 
-notesRouter.get('/notes/:id', async(req,res)=>{
-    const id = req.params.id;
-    
-    try {
-        const specyficNote = await Note.findById(id);
-
-        if(!specyficNote){
-            return res.status(400).send(`Note with that id doesn't exists`);
-        }
-
-        res.send(specyficNote);
-    } catch (error) {
-        res.status(500).send(error);
-    }
-})
-
 notesRouter.patch('/notes',auth, async (req, res)=>{
     const updates = Object.keys(req.body);
-    const allowedUpadtes = ['cardID','listID','title','priority'];
+    const allowedUpadtes = ['cardID','listID','title','priority','description'];
     const isUpdateValid = updates.every(update => allowedUpadtes.includes(update));
 
     if(!isUpdateValid){
@@ -64,6 +48,11 @@ notesRouter.patch('/notes',auth, async (req, res)=>{
 
         if(req.body.priority){
             updatedNote.priority = req.body.priority;
+            await updatedNote.save();
+        }
+
+        if(req.body.description){
+            updatedNote.description = req.body.description;
             await updatedNote.save();
         }
 

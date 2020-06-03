@@ -15,7 +15,6 @@ Router.post('/BoardsAPI',auth, async(req,res)=>{
     }
 })
 
-
 Router.get('/Dashboards', auth, async(req,res)=>{
     try {
         const allBoards = await Board.find({owner:req.user._id});

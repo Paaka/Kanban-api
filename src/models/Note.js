@@ -9,6 +9,10 @@ const notesSchema = new mongoose.Schema({
         type:Number,
         default:1,
     },
+    description:{
+        type:String,
+        default:'',
+    },
     listID:{
         type:mongoose.Schema.Types.ObjectId,
         required:true,
